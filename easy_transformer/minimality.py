@@ -1,6 +1,10 @@
 #%%
 import os
 import torch
+import sys
+sys.path.append('/data/shenth/work/Easy-Transformer/')
+import easy_transformer
+sys.path.append('/data/shenth/work/Automatic-Circuit-Discovery')
 
 if os.environ["USER"] in ["exx", "arthur"]:  # so Arthur can safely use octobox
     os.environ["CUDA_VISIBLE_DEVICES"] = "2"
@@ -100,7 +104,7 @@ if ipython is not None:
     ipython.magic("load_ext autoreload")
     ipython.magic("autoreload 2")
 #%%
-model_name = "gpt2"  # Here we used gpt-2 small ("gpt2")
+model_name = "/data/shenth/models/gpt2"  # Here we used gpt-2 small ("gpt2")
 print_gpu_mem("About to load model")
 model = EasyTransformer.from_pretrained(model_name)
 model.set_use_attn_result(True)

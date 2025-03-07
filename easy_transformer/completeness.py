@@ -1,6 +1,11 @@
 #%%
 import os
 import torch
+import sys
+sys.path.append('/data/shenth/work/Easy-Transformer/')
+import easy_transformer
+sys.path.append('/data/shenth/work/Automatic-Circuit-Discovery')
+import acdc
 
 from easy_transformer.ioi_circuit_extraction import NAIVE
 
@@ -123,7 +128,7 @@ from functools import partial
 # # <h1><b>Completeness</b></h1>
 # In this notebook, we compute the incompleteness scores for the circuit classes, and use precomputed data to plot the random and greedy incompleteness scores
 
-model_name = "gpt2"  # Here we used gpt-2 small ("gpt2")
+model_name = "/data/shenth/models/gpt2"  # Here we used gpt-2 small ("gpt2")
 
 print_gpu_mem("About to load model")
 model = EasyTransformer.from_pretrained(
@@ -360,10 +365,10 @@ import os
 
 circuit_to_export = "natural"
 fpath = f"circuit_completeness_{circuit_to_export}_CIRCUIT_at_{ctime()}.svg"
-if os.path.exists(
-    "/home/ubuntu/my_env/lib/python3.9/site-packages/easy_transformer/svgs"
-):
-    fpath = "svgs/" + fpath
+# if os.path.exists(
+#     "/home/ubuntu/my_env/lib/python3.9/site-packages/easy_transformer/svgs"
+# ):
+fpath = "svgs/" + fpath
 
 fig.write_image(fpath)
 fig.show()
@@ -642,7 +647,7 @@ if not skip_random:
 
 #%% [markdown] hopefully ignoarable plottig proceessin
 
-assert os.getcwd().endswith("Easy-Transformer"), os.getcwd
+# assert os.getcwd().endswith("Easy-Transformer"), os.getcwd
 fnames = os.listdir("jsons")
 fnames = [fname for fname in fnames if "greedy_search_results" in fname]
 
@@ -762,10 +767,7 @@ fig.update_yaxes(
 
 circuit_to_export = "natural"
 fpath = f"circuit_completeness_{circuit_to_export}_CIRCUIT_at_{ctime()}.svg"
-if os.path.exists(
-    "/home/ubuntu/my_env/lib/python3.9/site-packages/easy_transformer/svgs"
-):
-    fpath = "svgs/" + fpath
+fpath = "svgs/" + fpath
 
 fig.write_image(fpath)
 fig.show()

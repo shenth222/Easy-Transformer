@@ -10,6 +10,7 @@ import tqdm.auto as tqdm
 import re
 from huggingface_hub import HfApi
 from functools import partial, lru_cache
+from pathlib import Path
 
 from transformers import (
     AutoModelForCausalLM,
@@ -346,6 +347,13 @@ class EasyTransformer(HookedRootModule):
             print("Changing model dtype to", self.cfg.dtype)
         nn.Module.to(self, device)
 
+    def model_name_is_path(model_name):
+        from pathlib import Path
+        if Path(model_name).exists():
+            logging.info("Loading model config from local directory")
+            return True
+        return False
+
     @classmethod
     def from_pretrained(
         cls,
@@ -374,7 +382,8 @@ class EasyTransformer(HookedRootModule):
             device (str, optional): The device to load the model onto. By default will load to CUDA if available, else CPU
         """
         assert (model_name in cls.VALID_PRETRAINED_MODEL_NAMES) or (
-            model_name in cls.PRETRAINED_MODEL_NAMES_DICT
+            model_name in cls.PRETRAINED_MODEL_NAMES_DICT) or (
+            cls.model_name_is_path(model_name)
         ), f"Invalid model name: {model_name}. Valid model names are: {cls.VALID_PRETRAINED_MODEL_NAMES}"
 
         if model_name.endswith("-old"):

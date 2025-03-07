@@ -31,6 +31,10 @@ import gc
 import collections
 import copy
 import warnings
+import sys
+sys.path.append('/data/shenth/work/Easy-Transformer/')
+import easy_transformer
+sys.path.append('/data/shenth/work/Automatic-Circuit-Discovery')
 
 # import comet_ml
 import itertools
