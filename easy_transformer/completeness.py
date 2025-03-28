@@ -143,7 +143,7 @@ print_gpu_mem("Gpt2 loaded")
 #%%
 # IOI Dataset initialisation
 
-N = 100
+N = 1
 ioi_dataset = IOIDataset(prompt_type="mixed", N=N, tokenizer=model.tokenizer)
 
 abc_dataset = (
@@ -153,7 +153,9 @@ abc_dataset = (
 )
 
 #%%
-
+from IPython import embed
+embed()
+exit()
 
 def get_all_nodes(circuit):
     nodes = []

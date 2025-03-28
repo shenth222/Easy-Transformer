@@ -70,7 +70,7 @@ if ipython is not None:
     ipython.magic("autoreload 2")
 #%% [markdown]
 # Initialise model (use larger N or fewer templates for no warnings about in-template ablation)
-model = EasyTransformer.from_pretrained("gpt2").cuda()
+model = EasyTransformer.from_pretrained("/data/shenth/models/gpt2").cuda()
 model.set_use_headwise_qkv_input(True)
 model.set_use_attn_result(True)
 #%% [markdown]
@@ -172,7 +172,8 @@ def plot_path_patching(
                     show_fig=False,
                     bartitle="% change in logit difference",
                 )
-                fig.show()
+                # fig.show()
+                pio.write_image(fig, f"figure/patching_{position}.png")
 
 
 plot_path_patching(
@@ -186,9 +187,12 @@ plot_path_patching(
 
 # (change the layer_no and head_no)
 
-scatter_attention_and_contribution(
-    model=model, layer_no=9, head_no=9, ioi_dataset=ioi_dataset
+fig = scatter_attention_and_contribution(
+    model=model, layer_no=9, head_no=9, ioi_dataset=ioi_dataset, return_fig=True
 )
+layer_no=9
+head_no=9
+pio.write_image(fig, f"figure/How Strong {layer_no}.{head_no} Writes in the Name Embed Direction Relative to Attn Prob.png")
 #%% [markdown]
 ## Copy score
 
@@ -335,12 +339,19 @@ for idx, dataset in enumerate([ioi_dataset, abc_dataset]):
         fig.update_layout(
             title_text=f'Attention of NMs from END to various positions on {["ioi_dataset", "abc_dataset"][idx]}'
         )
-    fig.show()
+    # fig.show()
+    pio.write_image(fig, f"figure/attention_probs_{idx}.png")
 #%% [markdown]
 ## Visualize attention patterns
 
 model.reset_hooks()
-show_attention_patterns(model, [(9, 9), (9, 6), (10, 0)], ioi_dataset[:1])
+# fig = show_attention_patterns(model, [(9, 9), (9, 6), (10, 0)], ioi_dataset[:1], return_fig=True)
+fig = show_attention_patterns(model, [(9, 9)], ioi_dataset[:1], return_fig=True)
+pio.write_image(fig, "figure/attention_patterns_9.9.png")
+fig = show_attention_patterns(model, [(9, 6)], ioi_dataset[:1], return_fig=True)
+pio.write_image(fig, "figure/attention_patterns_9.6.png")
+fig = show_attention_patterns(model, [(10, 0)], ioi_dataset[:1], return_fig=True)
+pio.write_image(fig, "figure/attention_patterns_10.0.png")
 
 #%% [markdown]
 ## Token and position signal results
@@ -434,7 +445,8 @@ fig.update_layout(
         ticktext=["Position signal inverted", "Position signal original"],
     ),
 )
-fig.show()
+# fig.show()
+pio.write_image(fig, "figure/token_position_signal.png")
 
 #%% [markdown]
 ## Backup NM results
@@ -518,7 +530,8 @@ for idx, extra_hooks in enumerate([[], the_extra_hooks]):
                 )
 
                 both_results.append(results.clone())
-                fig.show()
+                # fig.show()
+                pio.write_image(fig, f"figure/patch_and_freeze_{pos}_{idx}.png")
 
 #%% [markdown]
 # Plot the two sets of results
@@ -586,7 +599,8 @@ for idx, results in enumerate(both_results):
         title="Most important heads by direct effect on logits"
         + ("" if idx == 0 else " (with top 3 name movers knocked out)")
     )
-    fig.show()
+    # fig.show()
+    pio.write_image(fig, f"figure/most_important_heads_{idx}.png")
 
 #%% [markdown]
 ## Validation outside of IOI
@@ -630,4 +644,5 @@ for mode, offset in [
         color_continuous_scale="Blues",
     )
     fig.update_layout(title=f"Attention pattern for {mode} mode")
-    fig.show()
+    # fig.show()
+    pio.write_image(fig, f"figure/attention_pattern_{mode}.png")
